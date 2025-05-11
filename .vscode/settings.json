@@ -1,0 +1,13 @@
+{
+    "idf.openOcdConfigs": [
+        "board/esp32s3-bridge.cfg"
+    ],
+    "idf.customExtraVars": {
+        "IDF_TARGET": "esp32s3"
+    },
+    "idf.flashType": "UART",
+    "idf.portWin": "COM14",
+    "files.associations": {
+        "waveshare_rgb_lcd_port.h": "c"
+    }
+}
