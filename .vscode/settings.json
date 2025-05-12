@@ -9,6 +9,7 @@
     "idf.portWin": "COM14",
     "files.associations": {
         "waveshare_rgb_lcd_port.h": "c",
-        "i2c_port.h": "c"
+        "i2c_port.h": "c",
+        "ui.h": "c"
     }
 }

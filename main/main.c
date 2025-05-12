@@ -2,25 +2,48 @@
 #include "lvgl.h"
 #include "i2c_port.h"
 #include <stdio.h>
+#include "ui/ui.h"
+
+#define BMP180_ADDR 0x77
+#define BMP180_REG_CONTROL 0xF4
+#define BMP180_CMD_READ_TEMP 0x2E
+#define BMP180_REG_OUT_MSB 0xF6
+
+lv_label_t *label;
+
+
 
 void app_main()
 {
- 
-    // LCD ve LVGL başlatma
     waveshare_esp32_s3_rgb_lcd_init();
+    lvgl_port_lock(-1);
+
+    // Basit bir label oluştur
+    label = lv_label_create(lv_scr_act());
+    lv_label_set_text(label, "Temp: -- °C");
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    lvgl_port_unlock();
 
     while (1) {
-        // MPU6050 bağlantısını kontrol et
-        mpu6050_check_ack();
+        int16_t raw_temp = bmp180_read_raw_temperature();
+        float approx_temp = raw_temp / 340.0 + 36.53;  // Yaklaşık değer
 
-        // Eğer ekrana bir şey çizeceksen:
-        if (lvgl_port_lock(0)) {  // kilidi dene (0 timeout = hemen dene)
-            // lvgl API ile ekran güncellemeleri yapılabilir burada
-            // Örneğin: lv_label_set_text(my_label, "Bağlantı OK");
+        ESP_LOGI("BMP180", "Raw: %d  Temp: %.2f", raw_temp, approx_temp);
 
-            lvgl_port_unlock();  // kilidi serbest bırak
-        }
+        //init ui from ui.h
+        // ui_init();
+        ui_init();
+        
 
-        vTaskDelay(pdMS_TO_TICKS(1000)); // 1 saniye bekle
+
+        // Ekranda güncelleme yap
+        // if (lvgl_port_lock(-1)) {
+        //     char buf[32];
+        //     snprintf(buf, sizeof(buf), "Temp: %.2f °C", approx_temp);
+        //     lv_label_set_text(label, buf);
+        //     lvgl_port_unlock();
+        // }
+
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
