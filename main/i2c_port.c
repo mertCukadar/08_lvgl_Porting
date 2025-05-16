@@ -2,8 +2,9 @@
 #include "driver/i2c.h"
 #include "esp_log.h"
 
-
-
+/* You can divide into functions, a function should not
+doing a lot of thing. There isn't a thing we can talk about error handling.
+Also you are using deprecated i2c functions, I strogly suggest using latest ones. */
 int16_t bmp180_read_raw_temperature() {
     uint8_t data[2];
 
@@ -36,7 +37,7 @@ int16_t bmp180_read_raw_temperature() {
     return raw_temp;
 }
 
-
+/* Can be static function also 
 void mpu6050_check_ack(){
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd); // ← Eksikti
